@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="log">
+    </div>
+    <div>
+        <input id="commandInput" type="text" />
+        <button id="beginExecution" type="button">
+            Submit command
+        </button>
+    </div>
+    <div>
+        <button id="tryToConnect">
+            Try to connect
+        </button>
+    </div>
+    <script>
+        var state = (function () {
+            var pushedState = 'pushed';
+            var normalState = 'normal';
+
+            var stateMaker = function (element) {
+                this.element = element;
+                this.state = normalState;
+                this.stateChangeHandlers = [];
+
+                var self = this;
+                this.element.addEventListener('click', function () {
+                    self.changeStateTo(pushedState);
+                })
+
+                this.changeStateTo = function (newState) {
+                    var oldState = this.state;
+                    this.state = newState;
+                    for(idx in this.stateChangeHandlers) {
+                        this.stateChangeHandlers[idx](this, oldState);
+                    }
+                }
+
+                this.registerStateChangeHandler = function (stateChangeHandler) {
+                    this.stateChangeHandlers.push(stateChangeHandler);
+                }
+            }
+
+            return stateMaker;
+        })();
+
+        var statableButton = new state(document.getElementById('beginExecution'))
+        statableButton.registerStateChangeHandler(function(statableButton, oldState) {
+            console.log(statableButton);
+            console.log(oldState);
+        });
+
+        var socket = new WebSocket("ws://localhost:8080");
+        socket.addEventListener('open', function (event) {
+            socket.send("Hello Server!");
+        })
+        socket.addEventListener('message', function (event) {
+            console.log("Message from server ", event.data)
+        })
+
+    </script>
+</body>
+</html>

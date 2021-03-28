@@ -1,0 +1,22 @@
+{
+  "name": "markpasko/db-transactions",
+  "description": "First of all this project started as my pet project for testing different concepts",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "mark",
+      "email": "deusmax88@gmail.com"
+    }
+  ],
+
+  "autoload": {
+    "psr-4" : {
+      "App\\" : "src/"
+    }
+  },
+
+  "require": {
+    "php-di/php-di": "^6.3"
+  }
+}
